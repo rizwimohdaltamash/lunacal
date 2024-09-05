@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
-import "../../css/style.css";
+// import "../../css/style.css";
 import { storage } from "../../firebase/Firebase"; // Adjust your import path
 import {
   ref,
