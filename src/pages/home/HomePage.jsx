@@ -91,68 +91,63 @@ const HomePage = () => {
   };
 
   return (
-    <div className="h-screen flex flex-row items-center bg-gray-800">
-      <div className="flex flex-col items-end h-[93%] md:mr-4 lg:mr-4">
-        {/* div 1 */}
-        <div className="w-full md:w-[50%] lg:w-[50%] h-[50vh] flex flex-col justify-center items-center">
-          <div className="flex flex-col justify-center items-center w-full h-full rounded-xl bg-gray-700 md:mr-7 lg:mr-7">
-            <div className="flex flex-row justify-evenly md:justify-center lg:justify-center items-center py-2 w-[95%] md:w-[95%] lg:w-[88%] h-[15%] md:h-[15%] lg:h-[20%] bg-gray-900 mt-4 rounded-3xl">
-              <button
-                className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "About Me" ? "#374151" : ""
-                }`}
-                onClick={() => setSelectedSection("About Me")}
-              >
-                About Me
-              </button>
-              <button
-                className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "Experiences" ? "#374151" : ""
-                }`}
-                onClick={() => setSelectedSection("Experiences")}
-              >
-                Experiences
-              </button>
-              <button
-                className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "Recommended" ? "#374151" : ""
-                }`}
-                onClick={() => setSelectedSection("Recommended")}
-              >
-                Recommended
-              </button>
-            </div>
-            <div className="flex flex-col md:w-[95%] lg:w-[88%] md:h-[85%] lg:h-[80%] mt-4 mb-4">
-              <div className="h-full w-full overflow-y-auto">
-                <p className="text-white p-3">{getDisplayedText()}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="h-screen flex flex-row w-full">
+         <div className="lg:w-1/2 bg-gray-800"></div>
 
-        {/* div 2 */}
-        <div className="w-full md:w-[50%] lg:w-[50%] h-[50vh] bg-gray-700 rounded-xl mt-6 md:mr-4 lg:mr-4 flex flex-col items-center">
-          <div className="flex flex-row w-[85%] mt-4">
-            <div className="flex flex-row w-full">
-              <div className="w-[30%] md:w-1/3 lg:w-1/2">
-                <button className="bg-black rounded-lg text-white px-4 py-3 md:px-6 lg:px-6 md:py-2 lg:py-2">
-                    <p className="text-sm md:text-lg lg:text-lg">Gallery</p>
-                  
-                </button>
+
+
+
+
+         <div className=" w-full lg:w-1/2 bg-gray-800">
+         
+         
+         <div className=" h-[47%] lg:h-[45%] bg-gray-600 m-5 rounded-2xl flex flex-col items-center">
+
+          <div className="h-[20%] w-full md:w-[95%] lg:w-[90%] mt-4 bg-gray-900 flex flex-row justify-evenly items-center rounded-[400px] md:rounded-[400px] lg:rounded-[400px]">
+            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+                  selectedSection === "About Me" ? "bg-gray-800" : ""
+                }`} onClick={() => setSelectedSection("About Me")} >About Me</button>
+
+            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+                  selectedSection === "Experiences" ? "bg-gray-800" : ""
+                }`} onClick={() => setSelectedSection("Experiences")}>Experiences</button>
+
+            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+                  selectedSection === "Recommended" ? "bg-gray-800" : ""
+                }`} onClick={() => setSelectedSection("Recommended")}>Recommended</button>
+          </div>
+
+          <div className="h-[80%] w-full lg:w-[90%] bg-gray-600" >
+          <div className="h-full w-full overflow-y-auto">
+                <p className="text-white  p-3">{getDisplayedText()}</p>
               </div>
-              <div className="w-[70%] md:w-2/3 lg:w-1/2 flex flex-row items-center">
-                <div className="flex flex-row w-1/2">
-                  <label className="bg-gray-800 rounded-full text-white px-1 py-2 md:px-4 lg:px-6 md:py-3 lg:py-2 cursor-pointer flex items-center shadow-[0px_4px_10px_rgba(255,255,255,0.5)] hover:bg-gray-900 transition duration-200 ease-in-out">
+          </div>
+
+         </div>
+
+
+             {/* div 2 */}
+         <div className="h-[45%] bg-gray-600 m-5 rounded-2xl">
+
+         <div className="h-[20%] flex flex-row ">
+            {/* Gallery */}
+            <div className="w-[25%] lg:w-1/3 text-white flex justify-start mt-4 ml-2 md:ml-10 lg:ml-10">
+              <button className="bg-black px-6 rounded-xl text-xs md:text-lg lg:text-lg">Gallery</button>
+            </div>
+            
+             {/* Left Right */}
+            <div className=" w-[75%] lg:w-2/3  flex justify-end mt-4">
+            <label className="bg-gray-800 rounded-full text-white px-3 py-2 md:px-4 lg:px-6 md:py-3 lg:py-2 cursor-pointer flex items-center shadow-[0px_4px_10px_rgba(255,255,255,0.5)] hover:bg-gray-900 transition duration-200 ease-in-out">
                     
-                    <p className="text-md md:text-xs lg:text-lg" >+ADD IMAGE</p>
+                    <p className="text-xs md:text-lg lg:text-lg" >+ADD IMAGE</p>
                     <input
                       type="file"
                       onChange={handleAddImage}
                       style={{ display: "none" }}
                     />
                   </label>
-                </div>
-                <div className="flex flex-row justify-center w-1/2 gap-x-4 cursor-pointer">
+
+          <div className="flex flex-row justify-center items-center w-1/2 gap-x-4 cursor-pointer">
                   <FaCircleArrowLeft
                     size={40}
                     className="rounded-full shadow-[0px_4px_10px_rgba(255,255,255,0.5)]"
@@ -164,17 +159,19 @@ const HomePage = () => {
                     onClick={() => scrollGallery("right")}
                   />
                 </div>
-              </div>
             </div>
-          </div>
 
-          {/* image area */}
 
-          <div
+        </div>
+
+
+        <div className="h-[80%] w-full flex flex-row justify-center">
+
+        <div
             ref={scrollRef}
-            className="flex overflow-x-auto w-[85%] mt-14 gap-x-4 scrollbar-custom" // Enable horizontal scrolling
+            className="flex overflow-x-auto w-[100%] mt-14 gap-x-4 scrollbar-custom" // Enable horizontal scrolling
           >
-            <div className="flex flex-row gap-x-4">
+            <div className="flex flex-row gap-x-4 ml-2 md:ml-8 lg:ml-10">
               {images.map((url, index) => (
                 <img
                   key={index}
@@ -185,11 +182,18 @@ const HomePage = () => {
               ))}
             </div>
           </div>
+
         </div>
-      </div>
+         </div>
+
+       
+
+         </div>
     </div>
-    
+  
   );
 };
 
 export default HomePage;
+
+
