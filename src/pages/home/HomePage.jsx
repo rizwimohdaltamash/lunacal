@@ -104,15 +104,15 @@ const HomePage = () => {
          <div className=" h-[47%] lg:h-[45%] bg-gray-600 m-5 rounded-2xl flex flex-col items-center">
 
           <div className="h-[20%] w-full md:w-[95%] lg:w-[90%] mt-4 bg-gray-900 flex flex-row justify-evenly items-center rounded-[400px] md:rounded-[400px] lg:rounded-[400px]">
-            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
                   selectedSection === "About Me" ? "bg-gray-800" : ""
                 }`} onClick={() => setSelectedSection("About Me")} >About Me</button>
 
-            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
                   selectedSection === "Experiences" ? "bg-gray-800" : ""
                 }`} onClick={() => setSelectedSection("Experiences")}>Experiences</button>
 
-            <button className={`px-3 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
+            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
                   selectedSection === "Recommended" ? "bg-gray-800" : ""
                 }`} onClick={() => setSelectedSection("Recommended")}>Recommended</button>
           </div>
