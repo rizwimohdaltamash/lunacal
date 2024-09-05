@@ -99,7 +99,7 @@ const HomePage = () => {
             <div className="flex flex-row justify-evenly md:justify-center lg:justify-center items-center py-2 w-[95%] md:w-[95%] lg:w-[88%] h-[15%] md:h-[15%] lg:h-[20%] bg-gray-900 mt-4 rounded-3xl">
               <button
                 className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "About Me" ? "bg-gray-700" : ""
+                  selectedSection === "About Me" ? "#374151" : ""
                 }`}
                 onClick={() => setSelectedSection("About Me")}
               >
@@ -107,7 +107,7 @@ const HomePage = () => {
               </button>
               <button
                 className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "Experiences" ? "bg-gray-700" : ""
+                  selectedSection === "Experiences" ? "#374151" : ""
                 }`}
                 onClick={() => setSelectedSection("Experiences")}
               >
@@ -115,7 +115,7 @@ const HomePage = () => {
               </button>
               <button
                 className={`bg-gray-900 px-0 md:px-3 lg:px-16 py-3 rounded-2xl text-white ${
-                  selectedSection === "Recommended" ? "bg-gray-700" : ""
+                  selectedSection === "Recommended" ? "#374151" : ""
                 }`}
                 onClick={() => setSelectedSection("Recommended")}
               >
