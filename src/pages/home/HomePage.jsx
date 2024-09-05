@@ -48,6 +48,8 @@ const HomePage = () => {
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setImages((prev) => [...prev, downloadURL]); // Add the new image to the list
+        // Reload the page after a successful upload
+      window.location.reload();
       }
     );
   };
