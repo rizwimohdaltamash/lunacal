@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid"; // For generating unique image names
 const HomePage = () => {
   const [selectedSection, setSelectedSection] = useState("About Me");
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state for image upload
 
   const scrollRef = useRef(null);
 
@@ -34,6 +35,8 @@ const HomePage = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    setLoading(true); // Show loading indicator during upload
+
     const storageRef = ref(storage, `gallery/${uuidv4()}_${file.name}`); // Store with a unique name
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -44,12 +47,12 @@ const HomePage = () => {
       },
       (error) => {
         console.error("Upload error: ", error);
+        setLoading(false); // Hide loading if error occurs
       },
       async () => {
         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
         setImages((prev) => [...prev, downloadURL]); // Add the new image to the list
-        // Reload the page after a successful upload
-      window.location.reload();
+        setLoading(false); // Hide loading once upload completes
       }
     );
   };
@@ -166,6 +169,8 @@ const HomePage = () => {
 
         </div>
 
+{/* Display Loading Spinner */}
+     {loading && <p className="text-white text-center">Uploading...</p>}
 
         <div className="h-[80%] w-full flex flex-row justify-center">
 
