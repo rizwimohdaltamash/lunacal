@@ -1,206 +1,92 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FaCircleArrowLeft, FaCircleArrowRight } from "react-icons/fa6";
-// import "../../css/style.css";
-import { storage } from "../../firebase/Firebase"; // Adjust your import path
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  listAll,
-} from "firebase/storage";
-import { v4 as uuidv4 } from "uuid"; // For generating unique image names
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { fireDB, storage } from "../../firebase/Firebase"; // Adjust your import path
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
 
 const HomePage = () => {
-  const [selectedSection, setSelectedSection] = useState("About Me");
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false); // Loading state for image upload
+  const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const scrollRef = useRef(null);
-
-  // Fetch images from Firebase Storage
-  useEffect(() => {
-    const fetchImages = async () => {
-      const listRef = ref(storage, "gallery/"); // Assume 'gallery/' is the folder
-      const res = await listAll(listRef);
-      const urls = await Promise.all(
-        res.items.map((item) => getDownloadURL(item))
-      );
-      setImages(urls);
-    };
-    fetchImages();
-  }, []);
-
-  // Handle image upload
-  const handleAddImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setLoading(true); // Show loading indicator during upload
-
-    const storageRef = ref(storage, `gallery/${uuidv4()}_${file.name}`); // Store with a unique name
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // Optional: You can track the progress here
-      },
-      (error) => {
-        console.error("Upload error: ", error);
-        setLoading(false); // Hide loading if error occurs
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setImages((prev) => [...prev, downloadURL]); // Add the new image to the list
-        setLoading(false); // Hide loading once upload completes
-      }
-    );
+  // Function to generate a random 6-character alphanumeric code
+  const generateRandomCode = () => {
+    return Math.random().toString(36).substring(2, 8);
   };
 
-  const scrollGallery = (direction) => {
-    const scrollAmount = 300; // Amount to scroll on each click
-    if (scrollRef.current) {
-      const newPosition =
-        direction === "left"
-          ? scrollRef.current.scrollLeft - scrollAmount
-          : scrollRef.current.scrollLeft + scrollAmount;
-      scrollRef.current.scrollTo({
-        left: newPosition,
-        behavior: "smooth",
-      });
+  // Handle file selection
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setFile(e.target.files[0]);
     }
   };
 
-  // Default number of characters for text
-  const aboutMeText =
-    "I am Mohd. Altamash Rizwi, currently in my third year of B.Tech at the Indian Institute of Information Technology, Ranchi. My journey in technology has been marked by a robust engagement with both front-end and back-end web development. Over the years, I have honed my skills in frontend and implementing user-friendly interfaces, as well as developing robust server-side applications. My projects have included everything from crafting responsive frontends to optimizing database performances, which has given me a well-rounded understanding of the full web development lifecycle.";
+  // Upload photo to Firebase Storage and save info to Firestore
+  const handleUpload = async () => {
+    if (!file) {
+      setMessage("Please select a file first.");
+      return;
+    }
+    setUploading(true);
+    const randomCode = generateRandomCode();
+    const fileName = `${uuidv4()}_${file.name}`;
 
-  const experiencesText =
-    "I completed a 2-month internship at DJ Interactive Technology, where I gained valuable experience in web development, focusing on both front-end and back-end aspects. During this time, I worked on various projects that involved live client based projects, designing user-friendly interfaces, implementing interactive features, and developing server-side logic. This role helped me enhance my technical skills and provided me with a solid understanding of creating effective and efficient web applications.Over the years, I have honed my skills in frontend and implementing user-friendly interfaces, as well as developing robust server-side applications.";
+    try {
+      const storageRef = ref(storage, `photos/${fileName}`);
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
 
-  const recommendedText =
-    "During my 2-month internship at DJ Interactive Technology, I demonstrated a strong aptitude for both front-end and back-end web development. My work involved designing intuitive user interfaces and developing efficient server-side solutions, which contributed significantly to our project outcomes. I consistently showed enthusiasm, a keen problem-solving ability, and a collaborative spirit. I am confident that these qualities, combined with my technical skills, make me a valuable asset to any team.";
+      // Save to Firestore with the random code
+      await addDoc(collection(fireDB, "photos"), {
+        photoURL: downloadURL,
+        code: randomCode,
+        timestamp: new Date(),
+      });
 
-  // Function to get the correct text based on selected section
-  const getDisplayedText = () => {
-    switch (selectedSection) {
-      case "About Me":
-        return aboutMeText;
-      case "Experiences":
-        return experiencesText;
-      case "Recommended":
-        return recommendedText;
-      default:
-        return aboutMeText;
+      setMessage("Photo uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading photo: ", error);
+      setMessage("Failed to upload photo.");
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className="h-screen flex flex-row w-full">
-         <div className="lg:w-1/2 bg-gray-800"></div>
-
-
-
-
-
-         <div className=" w-full lg:w-1/2 bg-gray-800">
-         
-         
-         <div className=" h-[47%] lg:h-[45%] bg-gray-600 m-5 rounded-2xl flex flex-col items-center">
-
-          <div className="h-[20%] w-full md:w-[95%] lg:w-[90%] mt-4 bg-gray-900 flex flex-row justify-evenly items-center rounded-[400px] md:rounded-[400px] lg:rounded-[400px]">
-            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
-                  selectedSection === "About Me" ? "bg-gray-800" : ""
-                }`} onClick={() => setSelectedSection("About Me")} >About Me</button>
-
-            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
-                  selectedSection === "Experiences" ? "bg-gray-800" : ""
-                }`} onClick={() => setSelectedSection("Experiences")}>Experiences</button>
-
-            <button className={`px-2 md:px-16 lg:px-[62px] py-2 md:py-5 lg:py-3 rounded-3xl text-white ${
-                  selectedSection === "Recommended" ? "bg-gray-800" : ""
-                }`} onClick={() => setSelectedSection("Recommended")}>Recommended</button>
-          </div>
-
-          <div className="h-[80%] w-full lg:w-[90%] bg-gray-600" >
-          <div className="h-full w-full overflow-y-auto">
-                <p className="text-white  p-3">{getDisplayedText()}</p>
-              </div>
-          </div>
-
-         </div>
-
-
-             {/* div 2 */}
-         <div className="h-[45%] bg-gray-600 m-5 rounded-2xl">
-
-         <div className="h-[20%] flex flex-row ">
-            {/* Gallery */}
-            <div className="w-[25%] lg:w-1/3 text-white flex justify-start mt-4 ml-2 md:ml-10 lg:ml-10">
-              <button className="bg-black px-6 rounded-xl text-xs md:text-lg lg:text-lg">Gallery</button>
-            </div>
-            
-             {/* Left Right */}
-            <div className=" w-[75%] lg:w-2/3  flex justify-end mt-4">
-            <label className="bg-gray-800 rounded-full text-white px-3 py-2 md:px-4 lg:px-6 md:py-3 lg:py-2 cursor-pointer flex items-center shadow-[0px_4px_10px_rgba(255,255,255,0.5)] hover:bg-gray-900 transition duration-200 ease-in-out">
-                    
-                    <p className="text-xs md:text-lg lg:text-lg" >+ADD IMAGE</p>
-                    <input
-                      type="file"
-                      onChange={handleAddImage}
-                      style={{ display: "none" }}
-                    />
-                  </label>
-
-          <div className="flex flex-row justify-center items-center w-1/2 gap-x-4 cursor-pointer">
-                  <FaCircleArrowLeft
-                    size={40}
-                    className="rounded-full shadow-[0px_4px_10px_rgba(255,255,255,0.5)]"
-                    onClick={() => scrollGallery("left")}
-                  />
-                  <FaCircleArrowRight
-                    size={40}
-                    className="rounded-full shadow-[0px_4px_10px_rgba(255,255,255,0.5)]"
-                    onClick={() => scrollGallery("right")}
-                  />
-                </div>
-            </div>
-
-
-        </div>
-
-{/* Display Loading Spinner */}
-     {loading && <p className="text-white text-center">Uploading...</p>}
-
-        <div className="h-[80%] w-full flex flex-row justify-center">
-
-        <div
-            ref={scrollRef}
-            className="flex overflow-x-auto w-[100%] mt-14 gap-x-4 scrollbar-custom" // Enable horizontal scrolling
-          >
-            <div className="flex flex-row gap-x-4 ml-2 md:ml-8 lg:ml-10">
-              {images.map((url, index) => (
-                <img
-                  key={index}
-                  src={url}
-                  alt="Uploaded"
-                  className="w-[200px] h-[150px] object-cover rounded-lg"
-                />
-              ))}
-            </div>
-          </div>
-
-        </div>
-         </div>
-
-       
-
-         </div>
+    <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">
+        Upload Your Photo
+      </h1>
+      <div className="bg-white p-6 rounded-lg shadow-md w-96">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="mb-4 w-full p-2 border border-gray-300 rounded"
+        />
+        <button
+          onClick={handleUpload}
+          disabled={uploading}
+          className={`w-full p-2 rounded text-white ${
+            uploading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          {uploading ? "Uploading..." : "Upload Photo"}
+        </button>
+        {message && (
+          <p className="mt-4 text-center text-sm text-gray-700">{message}</p>
+        )}
+      </div>
+      <button
+        onClick={() => navigate("/displayimage")}
+        className="mt-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 ease-in-out"
+      >
+        Next Page
+      </button>
     </div>
-  
   );
 };
 
 export default HomePage;
-
-
